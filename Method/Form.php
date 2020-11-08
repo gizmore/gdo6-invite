@@ -13,6 +13,7 @@ use GDO\Invite\GDO_Invitation;
 use GDO\Invite\Module_Invite;
 use GDO\Mail\Mail;
 use GDO\Core\GDT_Template;
+use GDO\UI\GDT_Link;
 
 /**
  * Invite other users via email.
@@ -93,7 +94,10 @@ final class Form extends MethodForm
 		$mail->setReceiver($inviteEmail);
 		$mail->setSubject(t('invite_mail_subj', [sitename()]));
 		$mail->setReply($user->getMail());
-		$mail->setBody(GDT_Template::php('Invite', 'mail/invitation_mail.php', ['user' => $user, 'email' => $inviteEmail]));
+		$url = url(GWF_MODULE, GWF_METHOD);
+		$linkSite = GDT_Link::make()->href($url)->rawLabel($url)->renderCell();
+		$args = ['user' => $user, 'email' => $inviteEmail, 'link_site' => $linkSite];
+		$mail->setBody(GDT_Template::php('Invite', 'mail/invitation_mail.php', $args));
 		$mail->sendAsText();
 	}
 }
