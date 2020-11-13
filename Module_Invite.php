@@ -2,9 +2,11 @@
 namespace GDO\Invite;
 
 use GDO\Core\GDO_Module;
-use GDO\UI\GDT_Bar;
+use GDO\UI\GDT_Link;
 use GDO\DB\GDT_Int;
 use GDO\User\GDO_User;
+use GDO\DB\GDT_Checkbox;
+use GDO\UI\GDT_Page;
 
 /**
  * Invite users via email. @see \GDO\Invite\Method\Form
@@ -12,6 +14,7 @@ use GDO\User\GDO_User;
  * Configure max pending requests.
  * 
  * @author gizmore
+ * @version 6.10
  * @since 6.09
  */
 final class Module_Invite extends GDO_Module
@@ -20,20 +23,21 @@ final class Module_Invite extends GDO_Module
 
 	public function getClasses()
 	{
-		return array(
-			'GDO\\Invite\\GDO_Invitation',
-		);
+	    return [
+	        GDO_Invitation::class,
+	    ];
 	}
 	
 	
 	public function getConfig()
 	{
-		return array(
+		return [
 			GDT_Int::make('invite_max_pending')->notNull()->initial('3'),
-		);
+		    GDT_Checkbox::make('hook_right_bar')->initial('1'),
+		];
 	}
-	
 	public function cfgMaxPending() { return $this->getConfigValue('invite_max_pending'); }
+	public function cfgRightBar() { return $this->getConfigValue('hook_right_bar'); }
 	
 	#############
 	### Hooks ###
@@ -43,9 +47,16 @@ final class Module_Invite extends GDO_Module
 		GDO_Invitation::hookUserActivated($user);
 	}
 	
-	public function hookRightBar(GDT_Bar $bar)
+	public function onInitSidebar()
 	{
-		return $this->templatePHP('bar/right_bar.php', ['bar' => $bar]);
+// 	    if ($this->cfgRightBar())
+	    {
+	        if (GDO_User::current()->isAuthenticated())
+	        {
+	            $bar = GDT_Page::$INSTANCE->rightNav;
+	            $bar->addField(GDT_Link::make('link_invite')->href(href('Invite', 'Form')));
+	        }
+	    }
 	}
 
 }
