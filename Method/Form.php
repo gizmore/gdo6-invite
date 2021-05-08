@@ -94,7 +94,7 @@ final class Form extends MethodForm
 		$mail->setReceiver($inviteEmail);
 		$mail->setSubject(t('invite_mail_subj', [sitename()]));
 		$mail->setReply($user->getMail());
-		$url = url(GWF_MODULE, GWF_METHOD);
+		$url = url(GDO_MODULE, GDO_METHOD);
 		$linkSite = GDT_Link::make()->href($url)->labelRaw($url)->renderCell();
 		$args = ['user' => $user, 'email' => $inviteEmail, 'link_site' => $linkSite];
 		$mail->setBody(GDT_Template::php('Invite', 'mail/invitation_mail.php', $args));
