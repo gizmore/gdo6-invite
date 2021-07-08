@@ -6,6 +6,7 @@ use GDO\Mail\GDT_Email;
 use GDO\DB\GDT_CreatedBy;
 use GDO\Date\GDT_DateTime;
 use GDO\DB\GDT_CreatedAt;
+use GDO\Register\GDO_UserActivation;
 use GDO\User\GDO_User;
 use GDO\Date\Time;
 use GDO\Core\GDT_Hook;
@@ -51,7 +52,7 @@ final class GDO_Invitation extends GDO
 		return self::table()->countWhere("invite_completed IS NOT NULL AND invite_creator={$user->getID()}");
 	}
 	
-	public static function hookUserActivated(GDO_User $user)
+	public static function hookUserActivated(GDO_User $user, GDO_UserActivation $activation=null)
 	{
 		if ($email = $user->getMail())
 		{
