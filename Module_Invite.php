@@ -2,6 +2,7 @@
 namespace GDO\Invite;
 
 use GDO\Core\GDO_Module;
+use GDO\Register\GDO_UserActivation;
 use GDO\UI\GDT_Link;
 use GDO\DB\GDT_Int;
 use GDO\User\GDO_User;
@@ -42,9 +43,9 @@ final class Module_Invite extends GDO_Module
 	#############
 	### Hooks ###
 	#############
-	public function hookUserActivated(GDO_User $user)
+	public function hookUserActivated(GDO_User $user, GDO_UserActivation $activation=null)
 	{
-		GDO_Invitation::hookUserActivated($user);
+		GDO_Invitation::hookUserActivated($user, $activation);
 	}
 	
 	public function onInitSidebar()
